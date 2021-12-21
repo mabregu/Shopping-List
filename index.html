@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Shopping List App</title>
+</head>
+<body>
+    <div id="shopping-list">
+        <h2>{{ header || 'Welcome' }}</h2>
+        <a v-if="editing" @click="editItem(false)" class="primary">Cancel</a>
+        <a v-else @click="editItem(true)" class="success">Add Item</a>
+        <a @click="clearItems()" class="danger">Clear List</a>
+
+        <div v-if="editing" class="form-control">
+            <input @keyup.enter="addItem" 
+                v-model="newItem" 
+                class="form-control" 
+                placeholder="Add an Item"
+                v-bind:disabled="characterCount >= 200"
+            >
+            <p>{{ characterCount }}/200</p>
+            <label>
+                <input type="checkbox" v-model="newItemHighPriority">
+                High Priority
+            </label>
+            <button @click="addItem" 
+                v-bind:disabled="newItem.length < 3"
+                class="btn btn-primary"
+            >Save Item</button>
+        </div>
+        <p v-if="items.length === 0">Good job! You've bought all your items!</p>
+        <ul>
+            <li v-for="item in reversedItems" 
+                @click="togglePurchased(item)"
+                :key="item.id"
+                :class="{ strikeout: item.purchased, priority: item.highPriority }"
+            >
+                {{ item.label }}
+                <a @click="removeItem(item)"
+                    href="#" 
+                    class="danger"
+                >x</a>
+            </li>
+        </ul>
+    </div>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
